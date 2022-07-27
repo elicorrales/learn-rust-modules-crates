@@ -274,7 +274,7 @@ $ tree
   
 # A Module Project  
 
-### We create a new project, using the "module" project above as a starting point.  
+### We create a new project, using the "bin-lin" project above as a starting point.  
 ```
 cd a-module-project/
 ```
@@ -379,3 +379,240 @@ I will let you do ```readelf -a target/release/libmylib.rlib``` if you're intere
   
 ## A Crate Project
   
+### We create a new project, using the "module" project above as a starting point.  
+```
+cd a_crate_project/
+```
+
+```
+$ tree
+.
+├── Cargo.toml
+└── src
+    ├── alib.rs
+    ├── main.rs
+    └── module1.rs
+
+1 directory, 4 files
+```
+  
+The ```Cargo.toml`` content, similar as before:  
+```
+$ cat Cargo.toml
+[package]
+name = "a_crate_project"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "mylib"
+path  = "src/alib.rs"
+```
+  
+The ```alib.rs```, ```main.rs```, and ```module1.rs``` is all the same as before.
+  
+We are **NOT** going to build this one.  
+  
+## A "Uses Crate" Project  
+
+```
+$ cd a-uses-crate-project/
+```
+  
+```
+$ tree
+.
+├── Cargo.toml
+└── src
+    └── main.rs
+
+1 directory, 2 files
+```
+  
+### How Simple a Project!
+  
+The contents of ```Cargo.toml```:
+```
+$ cat Cargo.toml
+[package]
+name = "a-uses-crate-project"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+a_crate_project = { path = "../a_crate_project" }
+```
+  
+#### Something we haven't seen in the other projects: a [dependencies] section.  
+  
+In that section, there is a reference to the crate project above that wasn't built.  
+  
+It uses the ```path =``` to tell Cargo where to find the supporting/helper crate.  
+  
+We have seen other ways for dependencies to added.  
+Here is the ```Cargo.toml``` from part 18 of our Solana series tutorial:
+```
+$ cat Cargo.toml
+[package]
+name = "my-first-on-chain-bin-plus-lib"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+solana-program = "*"  # <------ means go get from 
+                      # public crates repo
+
+[lib]
+crate-type = ["cdylib", "lib"]
+```
+  
+Another way to add a dependency is to a repo url:
+```
+[dependencies]
+smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
+```
+  
+The contents of  ```main.rs```:
+```
+$ cat src/main.rs
+use mylib::module1::*;
+
+fn say_hello_from_main() {
+    println!("Hello world from func in main.rs!");
+}
+fn main() {
+  say_hello_from_main();
+  say_hello_from_module1();
+}
+```
+  
+The content has not changed from before.  
+  
+Let's run this project.  Remember that the crate project has **NOT** been built.  
+  
+```
+$ cargo run --release
+   Compiling a_crate_project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a_crate_project)
+   Compiling a-uses-crate-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a-uses-crate-project)
+    Finished release [optimized] target(s) in 1.22s
+     Running `target/release/a-uses-crate-project`
+Hello world from func in main.rs!
+Hello world from from func in module1.rs!
+```
+  
+Look closely; it first builds the crate project. Then this projec.  
+Here is the result of this project after the build/run:
+  
+```
+$ tree
+.
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   └── main.rs
+└── target
+    ├── CACHEDIR.TAG
+    ├── debug
+    │   ├── build
+    │   ├── deps
+    │   │   ├── a_uses_crate_project-6adacf5f6cc43e5a.d
+    │   │   ├── a_uses_crate_project-d73acad864791103.d
+    │   │   ├── liba_uses_crate_project-6adacf5f6cc43e5a.rmeta
+    │   │   ├── liba_uses_crate_project-d73acad864791103.rmeta
+    │   │   ├── libmylib-d643942a253ba97c.rmeta
+    │   │   └── mylib-d643942a253ba97c.d
+    │   ├── examples
+    │   └── incremental
+    │       ├── a_uses_crate_project-2en4knlvqo9hf
+    │       │   ├── s-gc1ir7hy4d-1vadv15-jc31d9ckdnu4
+    │       │   │   ├── dep-graph.bin
+    │       │   │   ├── query-cache.bin
+    │       │   │   └── work-products.bin
+    │       │   └── s-gc1ir7hy4d-1vadv15.lock
+    │       ├── a_uses_crate_project-2zfplxzp4o8g8
+    │       │   ├── s-gc1ir7i819-u7snlo-21gwctzsoaydv
+    │       │   │   ├── dep-graph.bin
+    │       │   │   ├── query-cache.bin
+    │       │   │   └── work-products.bin
+    │       │   └── s-gc1ir7i819-u7snlo.lock
+    │       └── mylib-251jloevdv706
+    │           ├── s-gc1ir7d5rc-h7fflp-272rllks0znjp
+    │           │   ├── dep-graph.bin
+    │           │   ├── query-cache.bin
+    │           │   └── work-products.bin
+    │           └── s-gc1ir7d5rc-h7fflp.lock
+    └── release
+        ├── a-uses-crate-project <--ELF executable
+        ├── a-uses-crate-project.d
+        ├── build
+        ├── deps  <--where the dependencies are.
+        │   ├── a_uses_crate_project-6dd0bcca4f16d9f6
+        │   ├── a_uses_crate_project-6dd0bcca4f16d9f6.d
+        │   ├── libmylib-62ff37d133ef4368.rlib <--dep from crates project
+        │   ├── libmylib-62ff37d133ef4368.rmeta
+        │   └── mylib-62ff37d133ef4368.d
+        ├── examples
+        └── incremental
+
+18 directories, 29 files
+```
+  
+Now, finally, we again take a look at the crates helper project.  
+  
+```
+$ cd a_crate_project/
+```
+  
+```
+$ tree
+.
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   ├── alib.rs
+│   ├── main.rs
+│   └── module1.rs
+└── target
+    ├── CACHEDIR.TAG
+    └── debug
+        ├── build
+        ├── deps
+        │   ├── a_crate_project-3216489ff3f3cf6e.d
+        │   ├── a_crate_project-cd721465d94f0f2a.d
+        │   ├── liba_crate_project-3216489ff3f3cf6e.rmeta
+        │   ├── liba_crate_project-cd721465d94f0f2a.rmeta
+        │   ├── libmylib-28875868110477ff.rmeta
+        │   ├── libmylib-b21c8a7c2a30cad7.rmeta
+        │   ├── mylib-28875868110477ff.d
+        │   └── mylib-b21c8a7c2a30cad7.d
+        ├── examples
+        └── incremental
+            ├── a_crate_project-12v5uuz8e3hhc
+            │   ├── s-gc1iw6axk4-11oeggi-2g3mmnje3l7rx
+            │   │   ├── dep-graph.bin
+            │   │   ├── query-cache.bin
+            │   │   └── work-products.bin
+            │   └── s-gc1iw6axk4-11oeggi.lock
+            ├── a_crate_project-3fhx5buhl3udq
+            │   ├── s-gc1iw6b1oa-13oqdnp-2j75xhot15ap9
+            │   │   ├── dep-graph.bin
+            │   │   ├── query-cache.bin
+            │   │   └── work-products.bin
+            │   └── s-gc1iw6b1oa-13oqdnp.lock
+            ├── mylib-1o9jv2g1e0mib
+            │   ├── s-gc1iw64nbq-19flpzm-3ofkkn2d6zjd0
+            │   │   ├── dep-graph.bin
+            │   │   ├── query-cache.bin
+            │   │   └── work-products.bin
+            │   └── s-gc1iw64nbq-19flpzm.lock
+            └── mylib-uyy4ylma5i27
+                ├── s-gc1iw65knu-la1gwu-17u8jxkgt0e5d
+                │   ├── dep-graph.bin
+                │   ├── query-cache.bin
+                │   └── work-products.bin
+                └── s-gc1iw65knu-la1gwu.lock
+
+15 directories, 30 files
+```
