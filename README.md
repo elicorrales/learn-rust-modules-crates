@@ -5,6 +5,7 @@ We create the bin project by typing ```cargo init --bin --vcs none``` at the com
 The ```--vcs none``` yields less directories and files that we don't need for now.  
 We create the lib project by typing ```cargo init **--lib** --vcs none``` at the command-line, while within the ```learn-rust-modules-crates``` directory.  
 
+
 # Bin Vs Lib  
   
 Looking online, there are many ways to explain this.  To keep it simple (oversimplified?), we'll say that:
