@@ -334,7 +334,9 @@ fn main() {
 }
 ```
   
-You see how we could keep adding several ```src/moduleXXX.rs``` files, and refer to them in the ```src/lib.rs`` file, and add similar ```use mylib::moduleXXX::*;``` in ```main.rs```.
+You see how we could keep adding several ```src/moduleXXX.rs``` files,  
+and refer to them in the ```src/lib.rs``` file,  
+and add similar  ```use mylib::moduleXXX::*``` statements in  ```main.rs```.
   
 ### We run the project
 ```
