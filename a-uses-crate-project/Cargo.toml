@@ -1,0 +1,8 @@
+[package]
+name = "a-uses-crate-project"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+a_crate_project = { path = "../a_crate_project" } 

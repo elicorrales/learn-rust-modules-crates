@@ -1,0 +1,10 @@
+[package]
+name = "a_crate_project"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "mylib"
+path  = "src/alib.rs"
+
+[dependencies]
