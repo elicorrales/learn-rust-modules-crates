@@ -276,7 +276,7 @@ $ tree
   
 # A Module Project  
 
-### We create a new project, using the "bin-lin" project above as a starting point.  
+### We create a new project, using the "bin-lib" project above as a starting point.  
 ```
 cd a-module-project/
 ```
