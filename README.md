@@ -1,9 +1,9 @@
-# Brief Intro to Rust Modules, Crates, Pallets  
+# Brief Intro to Rust Modules, Crates 
   
-## Prep For Learning  
-We created this very project by typing ```cargo init --bin --vcs none``` at the command-line, while within the ```learn-rust-modules-crates-pallets``` directory.  
+# Prep For Learning  
+We created this very project by typing ```cargo init --bin --vcs none``` at the command-line, while within the ```learn-rust-modules-crates``` directory.  
 
-## Bin Vs Lib  
+# Bin Vs Lib  
   
 Looking online, there are many ways to explain this.  To keep it simple (oversimplified?), we'll say that:
 - a bin is an executable; something you can run on the command-line.
@@ -12,16 +12,28 @@ Looking online, there are many ways to explain this.  To keep it simple (oversim
     - example: ```cargo run``` will fail if all you have is a ```lib.rs```.
 - a lib typically contains helper functionality that can be used by a bin.  
 
-### Real-life Examples  
+## Real-life Examples  
   
-#### Attempt to execute (run) each project.  
+### Attempt to execute (run) each project.  
+  
+
+```
+$ ls
+README.md
+a-bin-project
+a-lib-project
+a-bin-lib-project
+a-module-project
+a_crate_project
+a-uses-crate-project
+```
   
 ```
 cd a-bin-project/
 IamDeveloper@SoftwareDevelopUbuntu2004 
-~/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates-pallets/a-bin-project
+~/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a-bin-project
 $ cargo run
-   Compiling a-bin-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates-pallets/a-bin-project)
+   Compiling a-bin-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a-bin-project)
     Finished dev [unoptimized + debuginfo] target(s) in 0.57s
      Running `target/debug/a-bin-project`
 Hello, world!
@@ -30,7 +42,7 @@ Hello, world!
 ```
 $ cd a-lib-project/
 IamDeveloper@SoftwareDevelopUbuntu2004 
-~/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates-pallets/a-lib-project
+~/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a-lib-project
 $ cargo run
 error: a bin target must be available for `cargo run`
 ```
@@ -38,7 +50,7 @@ error: a bin target must be available for `cargo run`
 However, we can build each project.
 
   
-#### Attempt to only build each project.  
+### Attempt to only build each project.  
   
 ##### Let's start with fresh bin and lib projects.  Here is what exists at the moment.  
 ```
@@ -113,7 +125,7 @@ $ tree
 │           ├── a-bin-project.d
 │           ├── build
 │           ├── deps
-│           │   ├── a_bin_project-83c0f8ea33b2ef4d
+│           │   ├── a_bin_project-83c0f8ea33b2ef4d <--ELF binary
 │           │   └── a_bin_project-83c0f8ea33b2ef4d.d
 │           ├── examples
 │           └── incremental
@@ -133,7 +145,7 @@ $ tree
             ├── examples
             ├── incremental
             ├── liba_lib_project.d
-            └── liba_lib_project.rlib
+            └── liba_lib_project.rlib <--ELF binary
 ```
   
 ##### Let's look at the important files:  
@@ -170,15 +182,19 @@ ELF Header:
 ```
   
 So both the bin and lib projects compile to ELF binary files.
+<br/>  
   
-## A Bin + Lib  Project  
+# A Bin + Lib  Project  
+```
+cd a-bin-lib-project/
+```
   
 ```
 $ tree
 .
 ├── Cargo.toml
 └── src
-    ├── lib.rs
+    ├── alib.rs
     └── main.rs
 
 1 directory, 3 files
@@ -221,7 +237,7 @@ fn main() {
 
 ```
 $ cargo run --release
-   Compiling a-bin-lib-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates-pallets/a-bin-lib-project)
+   Compiling a-bin-lib-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a-bin-lib-project)
     Finished release [optimized] target(s) in 0.61s
      Running `target/release/a-bin-lib-project`
 Hello world from func in main.rs!
@@ -254,9 +270,15 @@ $ tree
         └── libmylib.rlib <-- the library ELF
 ```
 
-## Modules  
+# Modules  
   
-### We create a new project, using the one above as a starting point.  
+# A Module Project  
+
+### We create a new project, using the "module" project above as a starting point.  
+```
+cd a-module-project/
+```
+  
 ```
 $ tree
 .
@@ -273,7 +295,7 @@ Contents of Cargo.toml:
 ```
 $ cat Cargo.toml
 [package]
-name = "a-bin-lib-project"
+name = "a-module-project"
 version = "0.1.0"
 edition = "2021"
 
@@ -315,9 +337,9 @@ You see how we could keep adding several ```src/moduleXXX.rs``` files, and refer
 ### We run the project
 ```
 $ cargo run --release
-   Compiling a-bin-lib-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates-pallets/a-module-project)
+   Compiling a-module-project v0.1.0 (/home/IamDeveloper/MySoftwareProjects/blockchain/rust/rust-substrate-blockchain-projects/my-first-substrate-projects/my-first-project-prep-lesson/learn-rust-modules-crates/a-module-project)
     Finished release [optimized] target(s) in 0.51s
-     Running `target/release/a-bin-lib-project`
+     Running `target/release/a-module-project`
 Hello world from func in main.rs!
 Hello world from from func in module1.rs!
 ```
@@ -335,12 +357,12 @@ $ tree
 └── target
     ├── CACHEDIR.TAG
     └── release
-        ├── a-bin-lib-project <--the executable ELF
-        ├── a-bin-lib-project.d
+        ├── a-module-project <--the executable ELF
+        ├── a-module-project.d
         ├── build
         ├── deps
-        │   ├── a_bin_lib_project-35a627ccaca2fd09
-        │   ├── a_bin_lib_project-35a627ccaca2fd09.d
+        │   ├── a_module_project-35a627ccaca2fd09
+        │   ├── a_module_project-35a627ccaca2fd09.d
         │   ├── libmylib-e455fb1361384432.rlib
         │   ├── libmylib-e455fb1361384432.rmeta
         │   └── mylib-e455fb1361384432.d
@@ -355,11 +377,5 @@ I will let you do ```readelf -a target/release/libmylib.rlib``` if you're intere
 
 ## Crates  
   
-A crate is a compilation unit in Rustkcalled, ```some_file.rs``` is treated as the crate file.  
-If ```some_file.rs``` has mod declarations in it, then the contents of the module files would be inserted in places where mod declarations in the crate file are found, before running the compiler over it.    
+## A Crate Project
   
-In other words, modules do not get compiled individually, only crates get compiled.  
-  
-A crate can be compiled into a binary or into a library.  
-By default, ```rustc``` will produce a binary from a crate.  
-This behavior can be overridden by passing the ```--crate-type``` flag to ```lib```.
