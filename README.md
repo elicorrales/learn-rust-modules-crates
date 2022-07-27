@@ -1,4 +1,4 @@
-# Brief Intro to Rust Modules, Crates, Pallets  
+# Brief Intro to Rust Libraries, Modules, Crates  
   
 ## Prep For Learning  
 We created this very project by typing ```cargo init --bin --vcs none``` at the command-line, while within the ```learn-rust-modules-crates-pallets``` directory.  
