@@ -1,7 +1,9 @@
 # Brief Intro to Rust Modules, Crates 
   
 # Prep For Learning  
-We created this very project by typing ```cargo init --bin --vcs none``` at the command-line, while within the ```learn-rust-modules-crates``` directory.  
+We create the bin project by typing ```cargo init --bin --vcs none``` at the command-line, while within the ```learn-rust-modules-crates``` directory.  
+The ```--vcs none``` yields less directories and files that we don't need for now.  
+We create the lib project by typing ```cargo init **--lib** --vcs none``` at the command-line, while within the ```learn-rust-modules-crates``` directory.  
 
 # Bin Vs Lib  
   
