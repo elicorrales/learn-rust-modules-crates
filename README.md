@@ -124,11 +124,11 @@ $ tree
 │   └── target
 │       ├── CACHEDIR.TAG
 │       └── release
-│           ├── a-bin-project
+│           ├── a-bin-project       <--- ELF binary executable
 │           ├── a-bin-project.d
 │           ├── build
 │           ├── deps
-│           │   ├── a_bin_project-83c0f8ea33b2ef4d <--ELF binary
+│           │   ├── a_bin_project-83c0f8ea33b2ef4d
 │           │   └── a_bin_project-83c0f8ea33b2ef4d.d
 │           ├── examples
 │           └── incremental
@@ -148,7 +148,7 @@ $ tree
             ├── examples
             ├── incremental
             ├── liba_lib_project.d
-            └── liba_lib_project.rlib <--ELF binary
+            └── liba_lib_project.rlib    <--ELF binary
 ```
   
 ##### Let's look at the important files:  
